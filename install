@@ -45,6 +45,10 @@ instala_riso() {
     chmod +x /usr/riso/riso
     cp ./conf/riso.conf /usr/riso/riso.conf
     
+    echo "Criando arquivo de IP do risos..."
+    echo "#IP do servidor RISOS" > /usr/riso/riso.svr
+    echo "ip=" >> /usr/riso/riso.svr
+
     echo "Sistema instalado com sucesso."
     echo "Tente digitar 'riso' para iniciar."
 }
@@ -147,7 +151,7 @@ instala_risos() {
 
 #Cria arquivo de configuração com as variáveis
 echo "Criando arquivo de configuração..."  
-echo "#Arquivo que contém as váriaveis que o riso usa" > /usr/riso/riso.vars
+echo "#Arquivo que contém as váriaveis que o riso usa (Automaticamente baixado do servidor risos) " > /usr/riso/riso.vars
 echo "" >> /usr/riso/riso.vars
 echo "#  Variáveis com sistema de arquivo das partições" >> /usr/riso/riso.vars
 echo "sa_partrec=${sa_partrec}" >> /usr/riso/riso.vars
