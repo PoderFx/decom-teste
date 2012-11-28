@@ -12,6 +12,8 @@ tab_part=$dir_img/tab_part
 riso_conf=$dir_riso/riso.conf
 riso_part=$dir_riso/riso.part
 arq_log=$dir_riso/riso.log
+arq_var=$dir_riso/riso.vars
+arq_ip=$dir_riso/riso.svr
 
 #Função de Log
 log(){
@@ -22,30 +24,38 @@ log(){
 #Carrega variaveis disponibilizadas pelo avahi para variáveis do sistema.
 carrega_variaveis() {
 
+#Carrega ip do servidor RISOS salvo em arquivo
+source $arq_ip	
     avahi_saida=`avahi-browse -rtp _RISO._tcp | grep '='`
-    servidor=`cut -d ';' -f8 <<< ${avahi_saida}` #ip do servidor.
-    if [ -z $servidor ]; then
+    servidor=$ip #ip do servidor.
+    if ping -c 1 ${servidor}
+then
+else
         dialog \
         --title 'Atencao' \
         --ok-label 'OK' \
-        --msgbox 'Não existe nenhum servidor RISOS ativo na rede.\nVerifique a conexão e tente novamente.' \
+        --msgbox 'Não foi possível estabelecer conexão com o servidor RISOS.\nVerifique a conexão, o enderaço do servidor e tente novamente.' \
         0 0
 	    log "ERRO: Servidor não encontrado na rede."
         exit 1
     fi
-    partwindows=`(cut -d ';' -f10 | cut -d '"' -f2 | cut -d '=' -f2) <<< ${avahi_saida}` #Partição com Windows.
-    partlinux=`(cut -d ';' -f10 | cut -d '"' -f4 | cut -d '=' -f2) <<< ${avahi_saida}` #Partição com Linux.
-    partrec=`(cut -d ';' -f10 | cut -d '"' -f6 | cut -d '=' -f2) <<< ${avahi_saida}` #Partição de Recuperação.
-    partswap=`(cut -d ';' -f10 | cut -d '"' -f8 | cut -d '=' -f2) <<< ${avahi_saida}` #Partição Swap.
 
-    #Tamanho total das imagens criadas no servidor.
-    tamwindows=`(cut -d ';' -f10 | cut -d '"' -f10 | cut -d '=' -f2) <<< ${avahi_saida}`
-    tamlinux=`(cut -d ';' -f10 | cut -d '"' -f12 | cut -d '=' -f2) <<< ${avahi_saida}`
+#Pega arquivo com as variáveis do servidor
+(scp -o StrictHostKeyChecking=no root@${servidor}:${arq_var} ${arq_var} && source $arq_var) || echo "Não foi possível carregar arquivo com variáveis"
+
+#    partwindows=`(cut -d ';' -f10 | cut -d '"' -f2 | cut -d '=' -f2) <<< ${avahi_saida}` #Partição com Windows.
+#    partlinux=`(cut -d ';' -f10 | cut -d '"' -f4 | cut -d '=' -f2) <<< ${avahi_saida}` #Partição com Linux.
+#    partrec=`(cut -d ';' -f10 | cut -d '"' -f6 | cut -d '=' -f2) <<< ${avahi_saida}` #Partição de Recuperação.
+#    partswap=`(cut -d ';' -f10 | cut -d '"' -f8 | cut -d '=' -f2) <<< ${avahi_saida}` #Partição Swap.
+#
+#    #Tamanho total das imagens criadas no servidor.
+#    tamwindows=`(cut -d ';' -f10 | cut -d '"' -f10 | cut -d '=' -f2) <<< ${avahi_saida}`
+#    tamlinux=`(cut -d ';' -f10 | cut -d '"' -f12 | cut -d '=' -f2) <<< ${avahi_saida}`
 
     #Sistema de arquivo das partições.
-    sa_partwindows=`(cut -d ';' -f10 | cut -d '"' -f14 | cut -d '=' -f2) <<< ${avahi_saida}`
-    sa_partlinux=`(cut -d ';' -f10 | cut -d '"' -f16 | cut -d '=' -f2) <<< ${avahi_saida}`
-    sa_partrec=`(cut -d ';' -f10 | cut -d '"' -f18 | cut -d '=' -f2) <<< ${avahi_saida}`
+#    sa_partwindows=`(cut -d ';' -f10 | cut -d '"' -f14 | cut -d '=' -f2) <<< ${avahi_saida}`
+#    sa_partlinux=`(cut -d ';' -f10 | cut -d '"' -f16 | cut -d '=' -f2) <<< ${avahi_saida}`
+#    sa_partrec=`(cut -d ';' -f10 | cut -d '"' -f18 | cut -d '=' -f2) <<< ${avahi_saida}`
     
     #Atualiza arquivo de variaveis.
     echo 'partwindows='$partwindows > $riso_part
@@ -524,8 +534,8 @@ atualiza() {
 		dialog \
 	        --ok-label 'OK' \
         	--title 'Atenção' \
-        	--msgbox '\n    RISO atualizado com sucesso.\n' \
-		    7 40
+        	--msgbox '\n   RISO atualizado com sucesso.\n' \
+		    7 39
 		
 		bash /usr/riso/riso
 		exit
