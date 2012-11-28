@@ -8,7 +8,7 @@ img_lin=$dir_img/linux.tar	#arquivo da imagem do linux
 img_rec=$dir_img/rec.tar	#arquivo da imagem da recuperacao (ubuntu_server)
 tor_win=$img_win.torrent	#torrent da imagem do windows
 tor_lin=$img_lin.torrent	#torrent da imagem do linux
-riso_service=/etc/avahi/services/riso.service	#servico do servidor de imagem
+riso_service=$dir_riso/riso.vars	#servico do servidor de imagem
 tab_part=$dir_img/tab_part	#NAO SEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEI
 riso_part=$dir_riso/riso.part	#NAO SEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEI
 arq_log=$dir_riso/riso.log	#Arquivo de log
@@ -153,7 +153,7 @@ cria_torrent_linux() {
 	
 	    #Escreve o tamanho da imagem no riso.service
 	    tam=`du ${img_lin} | cut -f1`
-	    sed "s/tamlinux=[0-9]*/tamlinux=${tam}/" < ${riso_service} > ${riso_service}.tmp
+	    sed "s/tamlinux=[0-9]*/tamlinux=${tam}/" < ${arq_var} > ${arq_var}.tmp
 	    mv ${riso_service}.tmp ${riso_service}
 	    log "Arquivo torrent do Linux criado."
 	else

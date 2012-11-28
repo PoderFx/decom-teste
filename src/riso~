@@ -30,6 +30,7 @@ source $arq_ip
     servidor=$ip #ip do servidor.
     if ping -c 1 ${servidor}
 then
+echo ""
 else
         dialog \
         --title 'Atencao' \

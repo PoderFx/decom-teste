@@ -63,6 +63,7 @@ else
     echo 'partlinux='$partlinux >> $riso_part
     echo 'sa_partwindows='$sa_partwindows >> $riso_part
     echo 'sa_partlinux='$sa_partlinux >> $riso_part
+   source $arq_var
     
 }
 
@@ -384,7 +385,6 @@ baixa_imagem_linux() {
 	log "Iniciando download do Linux."
 	echo "Conectando ao servidor..."
 	carrega_variaveis || return 1
-	
     #Vefifica se imagem já é a mais recente
 	sizeloclin="0"
 	[ -e ${img_lin} ] && sizeloclin=$(du ${img_lin} | cut -f1)
