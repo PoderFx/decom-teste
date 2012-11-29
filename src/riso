@@ -27,15 +27,23 @@ carrega_variaveis() {
 #Carrega ip do servidor RISOS salvo em arquivo
 source $arq_ip	
     avahi_saida=`avahi-browse -rtp _RISO._tcp | grep '='`
-    servidor=$ip #ip do servidor.
+
+opcao=$( dialog --stdout \
+--title "IP" \
+--inputbox "IP do servidor RISOS: " 8 60 $ip )
+
+
+    servidor=$opcao #ip do servidor.
     if ping -c 1 ${servidor}
 then
+sed "s/ip=[^<]*/ip=${servidor}/" < ${arq_ip} > ${arq_ip}.tmp
+mv ${arq_ip}.tmp ${arq_ip}
 echo ""
 else
         dialog \
         --title 'Atencao' \
         --ok-label 'OK' \
-        --msgbox 'Não foi possível estabelecer conexão com o servidor RISOS.\nVerifique a conexão, o enderaço do servidor e tente novamente.' \
+        --msgbox 'Não foi possível estabelecer conexão com o servidor RISOS.\nVerifique a conexão, o endereço do servidor e tente novamente.' \
         0 0
 	    log "ERRO: Servidor não encontrado na rede."
         exit 1
