@@ -77,6 +77,7 @@ else
 
 #Instala imagens do Linux e do Windows.
 instala() {
+source $arq_var
     log "Iniciando instalação do Windows e do Linux."
     if [ -e ${img_win} -a -e ${img_lin} ]; then
     
@@ -133,6 +134,7 @@ instala() {
 
 #Instala imagem do Windows.
 instala_windows() {
+source $arq_var
     log "Iniciando instalação do Windows."
     if [ -e ${img_win} ]; then
     
@@ -176,6 +178,7 @@ instala_windows() {
 
 #Instala imagem do Linux.
 instala_linux() {
+source $arq_var
     log "Iniciando instalação do Linux."
     if [ -e ${img_lin} ]; then
     
