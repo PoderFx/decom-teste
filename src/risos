@@ -27,15 +27,7 @@ carrega_variaveis() {
 
     avahi_saida=`avahi-browse -rtp _RISO._tcp | grep '='`
 
-
-ip1=`ifconfig | grep "inet " | grep -v "127.0.0.1" | head -n1 | cut -d" " -f13`
-
-
-if [ $ip1 == " " ]
-then
-ip1=`ifconfig | grep "inet " | grep -v "127.0.0.1" | head -n1 | cut -d" " -f12`
-fi
-    servidor=$ip1
+    servidor=`ifconfig | grep "inet " | grep -v "127.0.0.1" | head -n1 | awk {'print $3'}`
 #    if [ -z $servidor ]; then
 #        dialog \
 #        --title 'Atencao' \
