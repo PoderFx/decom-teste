@@ -26,7 +26,16 @@ carrega_variaveis() {
    source $arq_var
 
     avahi_saida=`avahi-browse -rtp _RISO._tcp | grep '='`
-    servidor=`ifconfig | grep "inet end.:" | grep -v "127.0.0.1" | cut -d" " -f13 | head -n1` #ip do servidor.
+
+
+ip1=`ifconfig | grep "inet " | grep -v "127.0.0.1" | head -n1 | cut -d" " -f13`
+
+
+if [ $ip1 == " " ]
+then
+ip1=`ifconfig | grep "inet " | grep -v "127.0.0.1" | head -n1 | cut -d" " -f12`
+fi
+    servidor=$ip1
 #    if [ -z $servidor ]; then
 #        dialog \
 #        --title 'Atencao' \
